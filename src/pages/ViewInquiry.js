@@ -6,12 +6,16 @@ export default function ViewInquiry() {
   const { id } = useParams();
   const [data, setData] = useState(null);
 
-  const fetchInquiry = async () => {
-    const res = await API.get(`/inquiry/${id}`);
-    setData(res.data);
-  };
-
   useEffect(() => {
+    const fetchInquiry = async () => {
+      try {
+        const res = await API.get(`/inquiry/${id}`);
+        setData(res.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
     fetchInquiry();
   }, []);
 
