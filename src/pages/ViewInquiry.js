@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import API from "../api/axios";
 
@@ -6,18 +6,14 @@ export default function ViewInquiry() {
   const { id } = useParams();
   const [data, setData] = useState(null);
 
-  useEffect(() => {
-    const fetchInquiry = async () => {
-      try {
-        const res = await API.get(`/inquiry/${id}`);
-        setData(res.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
+  const fetchInquiry = useCallback(async () => {
+    const res = await API.get(`/inquiry/${id}`);
+    setData(res.data);
+  }, [id]);
 
+  useEffect(() => {
     fetchInquiry();
-  }, []);
+  }, [fetchInquiry]);
 
   if (!data) return <h3>Loading...</h3>;
 
