@@ -1,84 +1,167 @@
+/* table design */
 .inquiry-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   font-size: 14px;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
 }
 
-.inquiry-table th,
+/* Header */
+.inquiry-table thead th {
+  /* background: linear-gradient(135deg, #f7f7f9, #ececf1); */
+  background: #ececf1;
+  font-weight: 600;
+  padding: 12px 10px;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: #444;
+  border-bottom: 1px solid #e6e6e6;
+}
+/* Cells */
 .inquiry-table td {
-  border: 1px solid #dcdcdc;
-  padding: 8px;
+  padding: 12px 10px;
+  border-bottom: 1px solid #f0f0f0;
   vertical-align: top;
 }
 
-.inquiry-table th {
-  background: #f5f5f5;
-  font-weight: 600;
+/* Row hover effect */
+.inquiry-table tbody tr {
+  transition: 0.2s ease;
 }
 
+.inquiry-table tbody tr:hover {
+  background: #fafbff;
+  transform: scale(1.002);
+}
+
+/* Student name */
 .student-name {
-  color: #b000b5;
-  font-weight: 600;
-  margin-bottom: 8px;
+  color: #6a1b9a;
+  font-weight: 700;
+  font-size: 14px;
   text-transform: uppercase;
+  margin-bottom: 6px;
+  letter-spacing: 0.3px;
 }
 
+/* Mobile row */
 .mobile-row {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
 }
 
 .mobile-row a:first-child {
-  color: #0d6efd;
+  color: #1a73e8;
   text-decoration: none;
+  font-weight: 500;
 }
 
+.mobile-row a:first-child:hover {
+  text-decoration: underline;
+}
+
+/* WhatsApp button */
 .whatsapp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: #25d366;
   color: white;
-  text-decoration: none;
-  padding: 2px 8px;
-  border-radius: 4px;
+  padding: 5px 7px;
+  border-radius: 6px;
   font-size: 12px;
+  transition: 0.2s;
 }
 
+.whatsapp-btn:hover {
+  background: #1ebe5d;
+  transform: scale(1.05);
+}
+
+/* Remark */
 .remark-cell {
-  color: #8e24aa;
-  min-width: 220px;
-  line-height: 1.5;
+  color: #7b1fa2;
+  font-size: 13px;
+  line-height: 1.4;
+  min-width: 200px;
 }
 
-.visited-text {
-  color: #8e24aa;
-  margin-top: 8px;
+.remark-date {
+  font-size: 11px;
+  color: #888;
+  margin-top: 4px;
 }
 
+/* Status badge (VERY IMPORTANT for modern look) */
+.status-badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Different statuses */
+.status-badge.IN_CALLING {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.status-badge.PENDING {
+  background: #fff3e0;
+  color: #ef6c00;
+}
+
+.status-badge.COMPLETED {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+/* Action column */
 .action-column {
   display: flex;
-  flex-direction: column;
   gap: 6px;
+  justify-content: center;
+  align-items: center;
 }
 
+/* Buttons */
 .action-btn {
   border: none;
-  color: white;
   cursor: pointer;
-  border-radius: 4px;
-  padding: 6px 10px;
+  padding: 7px 12px;
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  transition: 0.2s;
+  white-space: nowrap;
 }
 
-.edit {
-  background: #0d6efd;
+/* Individual colors */
+.edit { background: #1e88e5; }
+.view { background: #43a047; }
+.add  { background: #fb8c00; }
+
+.action-btn:hover {
+  transform: scale(1.08);
+  opacity: 0.9;
 }
 
-.view {
-  background: #0d6efd;
+/* Table rounded corners fix */
+.inquiry-table thead th:first-child {
+  border-top-left-radius: 12px;
 }
 
-.add {
-  background: #0d6efd;
+.inquiry-table thead th:last-child {
+  border-top-right-radius: 12px;
 }
 
 /* pagination css */
@@ -140,4 +223,95 @@
 
 .in_follow_up {
   background: #f44336;
+}
+
+/* filter css */
+.filter-container {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+
+  background: #fff;
+  padding: 14px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  margin-bottom: 12px;
+}
+
+/* SEARCH */
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f5f6fa;
+  padding: 8px 10px;
+  border-radius: 10px;
+}
+
+.search-box input {
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 220px;
+}
+
+/* STATUS PILLS */
+.status-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.status-pills button {
+  border: none;
+  padding: 6px 10px;
+  border-radius: 20px;
+  background: #eee;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.status-pills .active {
+  background: #6a1b9a;
+  color: white;
+}
+
+/* DROPDOWN */
+.dropdown {
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  background: #fafafa;
+}
+
+.dropdown.small {
+  width: 80px;
+}
+
+/* CLEAR */
+.clear-btn {
+  background: #ff5252;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* ACTIVE CHIPS */
+.active-filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.active-filters span {
+  background: #ede7f6;
+  color: #4a148c;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  cursor: pointer;
 }

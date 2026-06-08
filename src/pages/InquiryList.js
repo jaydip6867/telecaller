@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import API from "../api/axios";
 import { useNavigate } from "react-router-dom";
+import { FaPlus, FaRegEye, FaWhatsapp } from "react-icons/fa";
 
 export default function InquiryList() {
     const [data, setData] = useState([]);
@@ -14,20 +15,37 @@ export default function InquiryList() {
     const [currentPage, setCurrentPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [statusFilter, setStatusFilter] = useState("all");
+    const [schoolFilter, setSchoolFilter] = useState("all");
+    const [search, setSearch] = useState("");
 
     useEffect(() => {
         fetchData();
     }, []);
 
-
+    // filter schools for dropdown
+    const schoolOptions = [
+        ...new Set(
+            data
+                .map((item) => item.schoolCollege)
+                .filter(Boolean)
+        ),
+    ];
 
     // 1. Filtering
-    const filteredData =
-        statusFilter === "all"
-            ? data
-            : data.filter(
-                (item) => item.status === statusFilter
-            );
+    const filteredData = data.filter((item) => {
+        const statusMatch =
+            statusFilter === "all" || item.status === statusFilter;
+
+        const schoolMatch =
+            schoolFilter === "all" || item.schoolCollege === schoolFilter;
+
+        const searchMatch =
+            item.name?.toLowerCase().includes(search.toLowerCase()) ||
+            item.mobileNumber?.includes(search) ||
+            item.schoolCollege?.toLowerCase().includes(search.toLowerCase());
+
+        return statusMatch && schoolMatch && searchMatch;
+    });
 
     // 2. Pagination
     const indexOfLastRow = currentPage * rowsPerPage;
@@ -85,40 +103,111 @@ export default function InquiryList() {
                     ))}
                 </tbody>
             </table> */}
-            <select
-                value={rowsPerPage}
-                onChange={(e) => {
-                    setRowsPerPage(Number(e.target.value));
-                    setCurrentPage(1);
-                }}
-            >
-                <option value={10}>10</option>
-                <option value={25}>25</option>
-                <option value={50}>50</option>
-                <option value={100}>100</option>
-            </select>
-            <select
-                value={statusFilter}
-                onChange={(e) =>
-                    setStatusFilter(e.target.value)
-                }
-            >
-                <option value="all">All Status</option>
-                <option value="pending">Pending</option>
-                <option value="visited">Visited</option>
-                <option value="in_calling">In Calling</option>
-                <option value="admission">Admission</option>
-                <option value="in_follow_up">
-                    In Follow Up
-                </option>
-            </select>
+            <div className="filter-container">
+
+                {/* SEARCH */}
+                <div className="search-box">
+                    <input
+                        type="text"
+                        placeholder="Search name / mobile / school..."
+                        value={search}
+                        onChange={(e) => {
+                            setSearch(e.target.value);
+                            setCurrentPage(1);
+                        }}
+                    />
+                    <span>🔍</span>
+                </div>
+
+                {/* STATUS BUTTONS */}
+                <div className="status-pills">
+                    {["all", "pending", "visited", "in_calling", "admission", "in_follow_up"].map((st) => (
+                        <button
+                            key={st}
+                            className={statusFilter === st ? "active" : ""}
+                            onClick={() => {
+                                setStatusFilter(st);
+                                setCurrentPage(1);
+                            }}
+                        >
+                            {st.replaceAll("_", " ")}
+                        </button>
+                    ))}
+                </div>
+
+                {/* SCHOOL */}
+                <select
+                    className="dropdown"
+                    value={schoolFilter}
+                    onChange={(e) => {
+                        setSchoolFilter(e.target.value);
+                        setCurrentPage(1);
+                    }}
+                >
+                    <option value="all">All Schools</option>
+                    {schoolOptions.map((school) => (
+                        <option key={school} value={school}>
+                            {school}
+                        </option>
+                    ))}
+                </select>
+
+                {/* ROWS */}
+                <select
+                    className="dropdown small"
+                    value={rowsPerPage}
+                    onChange={(e) => {
+                        setRowsPerPage(Number(e.target.value));
+                        setCurrentPage(1);
+                    }}
+                >
+                    <option value={10}>10</option>
+                    <option value={25}>25</option>
+                    <option value={50}>50</option>
+                    <option value={100}>100</option>
+                </select>
+
+                {/* CLEAR ALL */}
+                <button
+                    className="clear-btn"
+                    onClick={() => {
+                        setSearch("");
+                        setStatusFilter("all");
+                        setSchoolFilter("all");
+                        setRowsPerPage(10);
+                        setCurrentPage(1);
+                    }}
+                >
+                    🧹 Clear
+                </button>
+
+            </div>
+            <div className="active-filters">
+                {search && (
+                    <span onClick={() => setSearch("")}>
+                        Search: {search} ✕
+                    </span>
+                )}
+
+                {statusFilter !== "all" && (
+                    <span onClick={() => setStatusFilter("all")}>
+                        Status: {statusFilter} ✕
+                    </span>
+                )}
+
+                {schoolFilter !== "all" && (
+                    <span onClick={() => setSchoolFilter("all")}>
+                        School: {schoolFilter} ✕
+                    </span>
+                )}
+            </div>
             <table className="inquiry-table">
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Date</th>
                         <th>Student Details</th>
-                        <th>Follow Up</th>
+                        {/* <th>Follow Up</th> */}
                         <th>School</th>
                         <th>Remark</th>
                         <th>Staff</th>
@@ -150,7 +239,7 @@ export default function InquiryList() {
                                             rel="noreferrer"
                                             className="whatsapp-btn"
                                         >
-                                            WhatsApp
+                                            <FaWhatsapp />
                                         </a>
                                     </div>
 
@@ -173,19 +262,31 @@ export default function InquiryList() {
                                 </div>
                             </td>
 
-                            <td>
+                            {/* <td>
                                 {item.followUpDate
                                     ? new Date(item.followUpDate).toLocaleDateString(
                                         "en-GB"
                                     )
                                     : "-"}
-                            </td>
+                            </td> */}
 
                             <td>{item.schoolCollege}</td>
 
                             <td>
+
                                 <div className="remark-cell">
-                                    {item.notes?.[item.notes.length - 1]?.note || "-"}
+                                    {item.notes?.length ? (
+                                        <>
+                                            <div>{item.notes[item.notes.length - 1].note}</div>
+                                            <div className="remark-date">
+                                                {new Date(
+                                                    item.notes[item.notes.length - 1].createdAt
+                                                ).toLocaleDateString("en-GB")}
+                                            </div>
+                                        </>
+                                    ) : (
+                                        "-"
+                                    )}
                                 </div>
                             </td>
 
@@ -203,14 +304,14 @@ export default function InquiryList() {
 
                             <td>
                                 <div className="action-column">
-                                    <button
+                                    {/* <button
                                         className="action-btn edit"
                                         onClick={() =>
                                             navigate(`/inquiry/${item._id}`)
                                         }
                                     >
                                         ✏️
-                                    </button>
+                                    </button> */}
 
                                     <button
                                         className="action-btn view"
@@ -218,7 +319,7 @@ export default function InquiryList() {
                                             navigate(`/inquiry/${item._id}`)
                                         }
                                     >
-                                        👁 {item.notes?.length || 0}
+                                        <FaRegEye /> {item.notes?.length || 0}
                                     </button>
 
                                     <button
@@ -227,7 +328,7 @@ export default function InquiryList() {
                                             navigate(`/add-note/${item._id}`)
                                         }
                                     >
-                                        ➕
+                                        <FaPlus />
                                     </button>
                                 </div>
                             </td>
