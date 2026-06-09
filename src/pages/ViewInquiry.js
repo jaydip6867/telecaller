@@ -3,19 +3,38 @@ import { useParams } from "react-router-dom";
 import API from "../api/axios";
 
 export default function ViewInquiry() {
+  const [loading, setLoading] = useState(false);
   const { id } = useParams();
   const [data, setData] = useState(null);
 
   const fetchInquiry = useCallback(async () => {
-    const res = await API.get(`/inquiry/${id}`);
-    setData(res.data);
+    try {
+      setLoading(true);
+
+      const res = await API.get(`/inquiry/${id}`);
+      setData(res.data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   }, [id]);
 
   useEffect(() => {
     fetchInquiry();
   }, [fetchInquiry]);
 
-  if (!data) return <h3>Loading...</h3>;
+  if (loading) {
+    return (
+      <div className="loader-container">
+        <div className="loader"></div>
+      </div>
+    );
+  }
+
+  if (!data) {
+    return <h3>No Data Found</h3>;
+  }
 
   return (
     <div style={styles.container}>

@@ -20,10 +20,10 @@ export default function Navbar() {
         <button onClick={() => navigate("/dashboard")}>Dashboard</button>
         {/* <button onClick={() => navigate("/addinquiry")}>Add Inquiry</button> */}
         <button onClick={() => navigate("/inquirylist")}>Inquiry List</button>
-        <button onClick={() => navigate("/uploadinquiry")}>Upload Excel</button>
+        {/* <button onClick={() => navigate("/uploadinquiry")}>Upload Excel</button> */}
 
         <button onClick={logout} style={styles.logout}>
-          Logout 🚪
+          Logout
         </button>
       </div>
     </div>

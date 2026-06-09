@@ -6,7 +6,7 @@ export default function Dashboard() {
       <div style={styles.grid}>
         {/* <a href="/addinquiry" style={styles.card}>➕ Add Inquiry</a> */}
         <a href="/inquirylist" style={styles.card}>📋 Inquiry List</a>
-        <a href="/uploadinquiry" style={styles.card}>📤 Upload Excel</a>
+        {/* <a href="/uploadinquiry" style={styles.card}>📤 Upload Excel</a> */}
       </div>
     </div>
   );

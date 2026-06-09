@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import API from "../api/axios";
 
@@ -8,35 +8,60 @@ export default function AddNote() {
 
   const [form, setForm] = useState({
     note: "",
-    status: "in_calling"
+    status: ""
   });
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchInquiry();
+  }, []);
+
+  const fetchInquiry = async () => {
+    try {
+      setLoading(true);
+
+      const res = await API.get(`/inquiry/${id}`);
+
+      setForm((prev) => ({
+        ...prev,
+        status: res.data.status || "pending"
+      }));
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const submit = async () => {
     try {
       await API.post(`/inquiry/${id}/note`, form);
 
       alert("Note Added + Status Updated 🚀");
-
       navigate("/inquirylist");
     } catch (err) {
       alert(err.response?.data?.message || "Error");
     }
   };
 
+  if (loading) {
+    return <h3>Loading...</h3>;
+  }
+
   return (
     <div style={styles.container}>
       <h2>➕ Add Note</h2>
 
-      {/* NOTE INPUT */}
       <textarea
         placeholder="Enter follow-up note..."
+        value={form.note}
         onChange={(e) =>
           setForm({ ...form, note: e.target.value })
         }
         style={styles.textarea}
       />
 
-      {/* STATUS DROPDOWN */}
       <select
         value={form.status}
         onChange={(e) =>
