@@ -14,25 +14,25 @@ export default function AddNote() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const fetchInquiry = async () => {
+      try {
+        setLoading(true);
+        const res = await API.get(`/inquiry/${id}`);
+
+        setForm((prev) => ({
+          ...prev,
+          status: res.data.status || "pending"
+        }));
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchInquiry();
-  }, []);
+  }, [id]);
 
-  const fetchInquiry = async () => {
-    try {
-      setLoading(true);
-
-      const res = await API.get(`/inquiry/${id}`);
-
-      setForm((prev) => ({
-        ...prev,
-        status: res.data.status || "pending"
-      }));
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const submit = async () => {
     try {
