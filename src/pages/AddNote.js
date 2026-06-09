@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import API from "../api/axios";
+import { FaPlus } from "react-icons/fa";
 
 export default function AddNote() {
   const { id } = useParams();
@@ -50,16 +51,22 @@ export default function AddNote() {
   }
 
   return (
-    <div style={styles.container}>
-      <h2>➕ Add Note</h2>
+  <div className="add-note-page">
+
+    <div className="add-note-card">
+
+      <div className="header">
+        <h2><FaPlus /> Add Follow-up Note</h2>
+        <p>Update inquiry status & add remarks</p>
+      </div>
 
       <textarea
-        placeholder="Enter follow-up note..."
+        placeholder="Write follow-up note here..."
         value={form.note}
         onChange={(e) =>
           setForm({ ...form, note: e.target.value })
         }
-        style={styles.textarea}
+        className="textarea"
       />
 
       <select
@@ -67,7 +74,7 @@ export default function AddNote() {
         onChange={(e) =>
           setForm({ ...form, status: e.target.value })
         }
-        style={styles.select}
+        className="select"
       >
         <option value="pending">Pending</option>
         <option value="in_calling">In Calling</option>
@@ -76,39 +83,15 @@ export default function AddNote() {
         <option value="decline">Decline</option>
       </select>
 
-      <button onClick={submit} style={styles.btn}>
+      <button
+        onClick={submit}
+        className="submit-btn"
+      >
         Save Note
       </button>
-    </div>
-  );
-}
 
-const styles = {
-  container: {
-    width: 400,
-    margin: "50px auto",
-    textAlign: "center"
-  },
-  textarea: {
-    width: "100%",
-    height: 120,
-    padding: 10,
-    marginTop: 10,
-    border: "1px solid #ddd"
-  },
-  select: {
-    width: "100%",
-    padding: 10,
-    marginTop: 10,
-    border: "1px solid #ddd"
-  },
-  btn: {
-    marginTop: 10,
-    padding: 10,
-    background: "green",
-    color: "white",
-    border: "none",
-    width: "100%",
-    cursor: "pointer"
-  }
-};
+    </div>
+
+  </div>
+);
+}

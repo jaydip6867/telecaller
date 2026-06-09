@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import API from "../api/axios";
 import { useNavigate } from "react-router-dom";
-import { FaPlus, FaRegEye, FaWhatsapp } from "react-icons/fa";
+import { FaAngleLeft, FaAngleRight, FaPlus, FaRegEye, FaWhatsapp } from "react-icons/fa";
+import { FaAnglesLeft, FaAnglesRight } from "react-icons/fa6";
 
 export default function InquiryList() {
     const [loading, setLoading] = useState(false);
@@ -68,6 +69,31 @@ export default function InquiryList() {
     const totalPages = Math.ceil(
         filteredData.length / rowsPerPage
     );
+
+    // fing pagination numbers 
+    const getPageNumbers = () => {
+        const pages = [];
+
+        if (totalPages <= 5) {
+            for (let i = 1; i <= totalPages; i++) {
+                pages.push(i);
+            }
+        } else {
+            if (currentPage <= 3) {
+                pages.push(1, 2, 3, "...", totalPages);
+            } else {
+                pages.push(
+                    currentPage - 2,
+                    currentPage - 1,
+                    currentPage,
+                    "...",
+                    totalPages
+                );
+            }
+        }
+
+        return pages;
+    };
     return (
         <div style={styles.container}>
             <h2>📋 Inquiry List</h2>
@@ -191,24 +217,27 @@ export default function InquiryList() {
                 </button>
 
             </div>
-            <div className="active-filters">
-                {search && (
-                    <span onClick={() => setSearch("")}>
-                        Search: {search} ✕
-                    </span>
-                )}
+            <div className="filter-info">
+                <div className="active-filters">
+                    {search && (
+                        <span onClick={() => setSearch("")}>
+                            Search: {search} ✕
+                        </span>
+                    )}
 
-                {statusFilter !== "all" && (
-                    <span onClick={() => setStatusFilter("all")}>
-                        Status: {statusFilter} ✕
-                    </span>
-                )}
+                    {statusFilter !== "all" && (
+                        <span onClick={() => setStatusFilter("all")}>
+                            Status: {statusFilter} ✕
+                        </span>
+                    )}
 
-                {schoolFilter !== "all" && (
-                    <span onClick={() => setSchoolFilter("all")}>
-                        School: {schoolFilter} ✕
-                    </span>
-                )}
+                    {schoolFilter !== "all" && (
+                        <span onClick={() => setSchoolFilter("all")}>
+                            School: {schoolFilter} ✕
+                        </span>
+                    )}
+                </div>
+                <h4>{currentData.length} Inquiries</h4>
             </div>
             {loading ? (
                 <div className="loader-container">
@@ -216,172 +245,187 @@ export default function InquiryList() {
                 </div>
             ) : (
                 <>
-                    <table className="inquiry-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Date</th>
-                                <th>Student Details</th>
-                                {/* <th>Follow Up</th> */}
-                                <th>School</th>
-                                <th>Remark</th>
-                                <th>Staff</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
+                    {currentData.length === 0 ? (
+                        <h3 style={{ marginTop: 50, textAlign: "center" }}>
+                            No inquiries found.
+                        </h3>
+                    ) : (
+                        <>
+                            <table className="inquiry-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Date</th>
+                                        <th>Student Details</th>
+                                        <th>School</th>
+                                        <th>Remark</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
 
-                        <tbody>
-                            {currentData.map((item, index) => (
-                                <tr key={index}>
-                                    <td>{index + 1}</td>
+                                <tbody>
+                                    {currentData.map((item, index) => (
+                                        <tr key={index}>
+                                            <td>{index + 1}</td>
 
-                                    <td>
-                                        {new Date(item.createdAt).toLocaleDateString("en-GB")}
-                                    </td>
+                                            <td>
+                                                {new Date(item.createdAt).toLocaleDateString("en-GB")}
+                                            </td>
 
-                                    <td>
-                                        <div className="student-cell">
-                                            <div className="student-name">{item.name}</div>
+                                            <td>
+                                                <div className="student-cell">
+                                                    <div className="student-name">{item.name}</div>
 
-                                            <div className="mobile-row">
-                                                <a href={`tel:${item.mobileNumber}`}>
-                                                    {item.mobileNumber}
-                                                </a>
+                                                    <div className="mobile-row">
+                                                        <a href={`tel:${item.mobileNumber}`}>
+                                                            {item.mobileNumber}
+                                                        </a>
 
-                                                <a
-                                                    href={`https://wa.me/91${item.mobileNumber}`}
-                                                    target="_blank"
-                                                    rel="noreferrer"
-                                                    className="whatsapp-btn"
-                                                >
-                                                    <FaWhatsapp />
-                                                </a>
-                                            </div>
-
-                                            {item.parentMobile && (
-                                                <div className="mobile-row">
-                                                    <a href={`tel:${item.parentMobile}`}>
-                                                        {item.parentMobile}
-                                                    </a>
-
-                                                    <a
-                                                        href={`https://wa.me/91${item.parentMobile}`}
-                                                        target="_blank"
-                                                        rel="noreferrer"
-                                                        className="whatsapp-btn"
-                                                    >
-                                                        WhatsApp
-                                                    </a>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </td>
-
-                                    {/* <td>
-                                {item.followUpDate
-                                    ? new Date(item.followUpDate).toLocaleDateString(
-                                        "en-GB"
-                                    )
-                                    : "-"}
-                            </td> */}
-
-                                    <td>{item.schoolCollege}</td>
-
-                                    <td>
-
-                                        <div className="remark-cell">
-                                            {item.notes?.length ? (
-                                                <>
-                                                    <div>{item.notes[item.notes.length - 1].note}</div>
-                                                    <div className="remark-date">
-                                                        {new Date(
-                                                            item.notes[item.notes.length - 1].createdAt
-                                                        ).toLocaleDateString("en-GB")}
+                                                        <a
+                                                            href={`https://wa.me/91${item.mobileNumber}`}
+                                                            target="_blank"
+                                                            rel="noreferrer"
+                                                            className="whatsapp-btn"
+                                                        >
+                                                            <FaWhatsapp />
+                                                        </a>
                                                     </div>
-                                                </>
-                                            ) : (
-                                                "-"
-                                            )}
-                                        </div>
-                                    </td>
 
-                                    <td>
-                                        <span
-                                            className={`status-badge ${item.status}`}
-                                        >
-                                            {item.status
-                                                .replaceAll("_", " ")
-                                                .toUpperCase()}
+                                                    {item.parentMobile && (
+                                                        <div className="mobile-row">
+                                                            <a href={`tel:${item.parentMobile}`}>
+                                                                {item.parentMobile}
+                                                            </a>
+
+                                                            <a
+                                                                href={`https://wa.me/91${item.parentMobile}`}
+                                                                target="_blank"
+                                                                rel="noreferrer"
+                                                                className="whatsapp-btn"
+                                                            >
+                                                                WhatsApp
+                                                            </a>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </td>
+
+                                            <td>{item.schoolCollege}</td>
+
+                                            <td>
+
+                                                <div className="remark-cell">
+                                                    {item.notes?.length ? (
+                                                        <>
+                                                            <div>{item.notes[item.notes.length - 1].note}</div>
+                                                            <div className="remark-date">
+                                                                {new Date(
+                                                                    item.notes[item.notes.length - 1].createdAt
+                                                                ).toLocaleDateString("en-GB")}
+                                                            </div>
+                                                        </>
+                                                    ) : (
+                                                        "-"
+                                                    )}
+                                                </div>
+                                            </td>
+
+                                            <td>
+                                                <span
+                                                    className={`status-badge ${item.status}`}
+                                                >
+                                                    {item.status
+                                                        .replaceAll("_", " ")
+                                                        .toUpperCase()}
+                                                </span>
+                                            </td>
+
+                                            <td>
+                                                <div className="action-column">
+
+                                                    <button
+                                                        className="action-btn view"
+                                                        onClick={() =>
+                                                            navigate(`/inquiry/${item._id}`)
+                                                        }
+                                                    >
+                                                        <FaRegEye /> {item.notes?.length || 0}
+                                                    </button>
+
+                                                    <button
+                                                        className="action-btn add"
+                                                        onClick={() =>
+                                                            navigate(`/add-note/${item._id}`)
+                                                        }
+                                                    >
+                                                        <FaPlus />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+
+                            <div className="pagination-container">
+
+                                {/* First */}
+                                <button
+                                    className="page-btn"
+                                    disabled={currentPage === 1}
+                                    onClick={() => setCurrentPage(1)}
+                                >
+                                    <FaAnglesLeft />
+                                </button>
+
+                                {/* Previous */}
+                                <button
+                                    className="page-btn"
+                                    disabled={currentPage === 1}
+                                    onClick={() => setCurrentPage(currentPage - 1)}
+                                >
+                                    <FaAngleLeft />
+                                </button>
+
+                                {getPageNumbers().map((page, index) =>
+                                    page === "..." ? (
+                                        <span key={index} className="dots">
+                                            ...
                                         </span>
-                                        {/* <div>{item.staffName}</div> */}
-                                        {/* <div className="visited-text">{item.status}</div> */}
-                                    </td>
+                                    ) : (
+                                        <button
+                                            key={index}
+                                            className={`page-btn ${currentPage === page ? "active" : ""
+                                                }`}
+                                            onClick={() => setCurrentPage(page)}
+                                        >
+                                            {page}
+                                        </button>
+                                    )
+                                )}
 
-                                    <td>
-                                        <div className="action-column">
-                                            {/* <button
-                                        className="action-btn edit"
-                                        onClick={() =>
-                                            navigate(`/inquiry/${item._id}`)
-                                        }
-                                    >
-                                        ✏️
-                                    </button> */}
+                                {/* Next */}
+                                <button
+                                    className="page-btn"
+                                    disabled={currentPage === totalPages}
+                                    onClick={() => setCurrentPage(currentPage + 1)}
+                                >
+                                    <FaAngleRight />
+                                </button>
 
-                                            <button
-                                                className="action-btn view"
-                                                onClick={() =>
-                                                    navigate(`/inquiry/${item._id}`)
-                                                }
-                                            >
-                                                <FaRegEye /> {item.notes?.length || 0}
-                                            </button>
+                                {/* Last */}
+                                <button
+                                    className="page-btn"
+                                    disabled={currentPage === totalPages}
+                                    onClick={() => setCurrentPage(totalPages)}
+                                >
+                                    <FaAnglesRight />
+                                </button>
 
-                                            <button
-                                                className="action-btn add"
-                                                onClick={() =>
-                                                    navigate(`/add-note/${item._id}`)
-                                                }
-                                            >
-                                                <FaPlus />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                    <div className="pagination-container">
-                        <button
-                            disabled={currentPage === 1}
-                            onClick={() => setCurrentPage(currentPage - 1)}
-                        >
-                            Previous
-                        </button>
-
-                        {[...Array(totalPages)].map((_, index) => (
-                            <button
-                                key={index}
-                                className={
-                                    currentPage === index + 1
-                                        ? "active-page"
-                                        : ""
-                                }
-                                onClick={() =>
-                                    setCurrentPage(index + 1)
-                                }
-                            >
-                                {index + 1}
-                            </button>
-                        ))}
-
-                        <button
-                            disabled={currentPage === totalPages}
-                            onClick={() => setCurrentPage(currentPage + 1)}
-                        >
-                            Next
-                        </button>
-                    </div>
+                            </div>
+                        </>
+                    )}
                 </>
             )}
         </div>

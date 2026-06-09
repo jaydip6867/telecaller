@@ -37,51 +37,105 @@ export default function ViewInquiry() {
   }
 
   return (
-    <div style={styles.container}>
-      <h2>📄 Inquiry Details</h2>
+    <div className="inquiry-details-page">
 
-      {/* BASIC INFO */}
-      <div style={styles.card}>
-        <p><b>Name:</b> {data.name}</p>
-        <p><b>Std:</b> {data.std}</p>
-        <p><b>Mobile:</b> {data.mobileNumber}</p>
-        <p><b>School:</b> {data.schoolCollege}</p>
+      {/* Header Card */}
+      <div className="profile-card">
+        <div className="avatar">
+          {data.name?.charAt(0).toUpperCase()}
+        </div>
+
+        <div className="profile-info">
+          <h2>{data.name}</h2>
+          <span className={`status-badge_view ${data.status}`}>
+            {data.status?.replaceAll("_", " ").toUpperCase()}
+          </span>
+        </div>
       </div>
 
-      {/* NOTES SECTION */}
-      <h3>📝 Follow-up Notes</h3>
+      {/* Details Grid */}
+      <div className="details-grid">
 
-      {data.notes && data.notes.length > 0 ? (
-        data.notes.map((note, index) => (
-          <div key={index} style={styles.note}>
-            <p>{note.note}</p>
-            <small>
-              👤 {note.addedBy?.name || "User"} |{" "}
-              {new Date(note.createdAt).toLocaleString()}
-            </small>
+        <div className="info-card">
+          <h3>📱 Contact Details</h3>
+
+          <div className="info-row">
+            <span>Mobile</span>
+            <strong>{data.mobileNumber}</strong>
           </div>
-        ))
-      ) : (
-        <p>No notes found</p>
-      )}
+
+          {data.parentMobile && (
+            <div className="info-row">
+              <span>Parent Mobile</span>
+              <strong>{data.parentMobile}</strong>
+            </div>
+          )}
+        </div>
+
+        <div className="info-card">
+          <h3>🎓 Academic Details</h3>
+
+          <div className="info-row">
+            <span>Standard</span>
+            <strong>{data.std}</strong>
+          </div>
+
+          <div className="info-row">
+            <span>School</span>
+            <strong>{data.schoolCollege}</strong>
+          </div>
+        </div>
+
+      </div>
+
+      {/* Timeline */}
+      <div className="notes-section">
+        <h3>📝 Follow-up Notes</h3>
+
+        {data.notes?.length ? (
+          <div className="notes-grid">
+
+            {data.notes
+              .slice()
+              .reverse()
+              .map((note, index) => (
+                <div className="note-card" key={index}>
+
+                  <div className="note-header">
+                    <div className="note-avatar">
+                      {(note.addedBy?.name || "U")
+                        .charAt(0)
+                        .toUpperCase()}
+                    </div>
+
+                    <div>
+                      <h4>
+                        {note.addedBy?.name || "User"}
+                      </h4>
+
+                      <span>
+                        {new Date(
+                          note.createdAt
+                        ).toLocaleString()}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="note-body">
+                    {note.note}
+                  </div>
+
+                </div>
+              ))}
+
+          </div>
+        ) : (
+          <div className="empty-notes">
+            No Follow-up Notes Available
+          </div>
+        )}
+      </div>
+
     </div>
   );
 }
-
-const styles = {
-  container: {
-    padding: 20
-  },
-  card: {
-    padding: 15,
-    border: "1px solid #ddd",
-    marginBottom: 20,
-    borderRadius: 8
-  },
-  note: {
-    padding: 10,
-    marginBottom: 10,
-    borderLeft: "4px solid green",
-    background: "#f9f9f9"
-  }
-};
