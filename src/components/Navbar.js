@@ -5,10 +5,12 @@ export default function Navbar() {
 
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("role");
     navigate("/");
   };
 
   const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
 
   if (!token) return null; // login page par header na dekhay
 
@@ -30,6 +32,24 @@ export default function Navbar() {
         >
           Inquiry List
         </button>
+
+        {role?.toLowerCase() === "admin" && (
+          <>
+            <button
+              style={styles.navBtn}
+              onClick={() => navigate("/uploadinquiry")}
+            >
+              Upload Inquiry
+            </button>
+
+            <button
+              style={styles.navBtn}
+              onClick={() => navigate("/addinquiry")}
+            >
+              Add Inquiry
+            </button>
+          </>
+        )}
 
         <button
           onClick={logout}
