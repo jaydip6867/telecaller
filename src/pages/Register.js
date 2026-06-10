@@ -1,5 +1,6 @@
 import { useState } from "react";
 import API from "../api/axios";
+import Swal from "sweetalert2";
 
 export default function Register() {
   const [form, setForm] = useState({
@@ -13,12 +14,24 @@ export default function Register() {
     try {
       await API.post("/auth/register", form);
 
-      alert("Registration Success 🎉");
+      Swal.fire({
+        icon: "success",
+        title: "Success!",
+        text: "Registration Success 🎉",
+        confirmButtonColor: "#2563eb",
+        timer: 2000,
+      });
 
       // login page par redirect
       window.location.href = "/";
     } catch (err) {
-      alert(err.response?.data?.message || "Error");
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: err.response?.data?.message || "Error",
+        confirmButtonColor: "#dc2626",
+        timer: 2000,
+      });
     }
   };
 

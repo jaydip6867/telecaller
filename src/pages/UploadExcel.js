@@ -1,6 +1,7 @@
 import { useState } from "react";
 import API from "../api/axios";
 import { FaFileExcel, FaUpload } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 export default function UploadExcel() {
   const [file, setFile] = useState(null);
@@ -8,7 +9,12 @@ export default function UploadExcel() {
 
   const upload = async () => {
     if (!file) {
-      alert("Please select an Excel file");
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Please select an Excel file",
+        confirmButtonColor: "#dc2626",
+      });
       return;
     }
 
@@ -20,11 +26,23 @@ export default function UploadExcel() {
 
       await API.post("/inquiry/import-excel", formData);
 
-      alert("Excel Uploaded Successfully");
+      Swal.fire({
+        icon: "success",
+        title: "Success!",
+        text: "Excel Uploaded Successfully",
+        confirmButtonColor: "#2563eb",
+        timer: 2000,
+      });
       setFile(null);
     } catch (error) {
       console.error(error);
-      alert("Upload Failed");
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Upload Failed",
+        confirmButtonColor: "#dc2626",
+        timer: 2000,
+      });
     } finally {
       setLoading(false);
     }

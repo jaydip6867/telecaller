@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import API from "../api/axios";
 import { FaPlus } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 export default function AddNote() {
   const { id } = useParams();
@@ -39,10 +40,22 @@ export default function AddNote() {
     try {
       await API.post(`/inquiry/${id}/note`, form);
 
-      alert("Note Added + Status Updated 🚀");
+      Swal.fire({
+        icon: "success",
+        title: "Success!",
+        text: "Note Added + Status Updated 🚀",
+        confirmButtonColor: "#2563eb",
+        timer: 2000,
+      });
       navigate("/inquirylist");
     } catch (err) {
-      alert(err.response?.data?.message || "Error");
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: err.response?.data?.message || "Something went wrong!",
+        confirmButtonColor: "#dc2626",
+        timer: 2000,
+      });
     }
   };
 

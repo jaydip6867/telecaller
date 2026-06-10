@@ -687,3 +687,115 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+/* add inquiry page css */
+.inquiry-page {
+  min-height: 100vh;
+  background: linear-gradient(
+    135deg,
+    #e0f2fe,
+    #dbeafe,
+    #ede9fe
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+}
+
+.inquiry-card {
+  width: 100%;
+  max-width: 500px;
+  background: #fff;
+  padding: 25px 35px;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+  transition: 0.3s ease;
+}
+
+.inquiry-card:hover {
+  transform: translateY(-3px);
+}
+
+.inquiry-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.inquiry-header h2 {
+  color: #1e293b;
+  margin-bottom: 5px;
+  font-size: 28px;
+}
+
+.inquiry-header p {
+  color: #64748b;
+  font-size: 14px;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 14px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  outline: none;
+  font-size: 15px;
+  transition: 0.3s;
+}
+
+.form-group input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+}
+
+.save-btn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(
+    135deg,
+    #2563eb,
+    #1d4ed8
+  );
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.save-btn:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(
+    135deg,
+    #1d4ed8,
+    #1e40af
+  );
+}
+
+.save-btn:active {
+  transform: scale(0.98);
+}
+
+@media (max-width: 600px) {
+  .inquiry-card {
+    padding: 25px;
+  }
+
+  .inquiry-header h2 {
+    font-size: 22px;
+  }
+}

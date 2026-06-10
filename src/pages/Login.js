@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import API from "../api/axios";
+import Swal from "sweetalert2";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -19,7 +20,13 @@ export default function Login() {
       localStorage.setItem("role", res.data.role);
       window.location.href = "/dashboard";
     } catch (err) {
-      alert(err.response?.data?.message || "Login Failed");
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: err.response?.data?.message || "Login Failed",
+        confirmButtonColor: "#dc2626",
+        timer: 2000,
+      });
     } finally {
       setLoading(false);
     }
