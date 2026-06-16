@@ -9,6 +9,7 @@ import InquiryList from "./pages/InquiryList";
 import UploadExcel from "./pages/UploadExcel";
 import AddNote from "./pages/AddNote";
 import ViewInquiry from "./pages/ViewInquiry";
+import TodayFollowup from './pages/Todayfollowup';
 
 import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
@@ -88,6 +89,15 @@ function App() {
           element={
             <PrivateRoute>
               <UploadExcel />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/today-followups"
+          element={
+            <PrivateRoute>
+              <TodayFollowup />
             </PrivateRoute>
           }
         />
