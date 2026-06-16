@@ -376,7 +376,7 @@ export default function InquiryList() {
                                             <td>
                                                 <div className="action-column">
 
-                                                    <Link to={`/inquiry/${item._id}`} className="action-btn view"><FaRegEye /> {item.notes?.length || 0}</Link>
+                                                    <Link to={`/inquiry/${item._id}`} className="action-btn view" target="_blank"><FaRegEye /> {item.notes?.length || 0}</Link>
                                                     {/* <button
                                                         className="action-btn view"
                                                         onClick={() =>
@@ -385,7 +385,7 @@ export default function InquiryList() {
                                                     >
                                                         <FaRegEye /> {item.notes?.length || 0}
                                                     </button> */}
-                                                    <Link to={`/add-note/${item._id}`} className="action-btn add"><FaPlus /></Link>
+                                                    <Link to={`/add-note/${item._id}`} className="action-btn add" target="_blank"><FaPlus /></Link>
                                                     {/* <button
                                                         className="action-btn add"
                                                         onClick={() =>
