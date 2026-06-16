@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const API = axios.create({
-  // baseURL: "https://telecaller-backend.onrender.com/api",
-  baseURL: "http://localhost:4000/api",
+  baseURL: "https://telecaller-backend.onrender.com/api",
+  // baseURL: "http://localhost:4000/api",
 });
 
 // token auto attach
