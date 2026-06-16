@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import API from "../api/axios";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { FaAngleLeft, FaAngleRight, FaPlus, FaRegEye, FaWhatsapp } from "react-icons/fa";
 import { FaAnglesLeft, FaAnglesRight } from "react-icons/fa6";
 
 export default function InquiryList() {
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
-    const navigate = useNavigate();
+    const [selectedInquiryId, setSelectedInquiryId] = useState(null);
 
     const fetchData = async () => {
         try {
@@ -94,6 +94,35 @@ export default function InquiryList() {
 
         return pages;
     };
+
+    // tution model code
+    const [showModal, setShowModal] = useState(false);
+    const [tuitionName, setTuitionName] = useState("");
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+
+            await API.post(
+                `/inquiry/${selectedInquiryId}`,
+                {
+                    tution: tuitionName
+                }
+            );
+
+            await fetchData();
+
+            setTuitionName("");
+            setSelectedInquiryId(null);
+            setShowModal(false);
+
+        } catch (error) {
+            console.error(error);
+            alert("Failed to update tuition");
+        }
+    };
+
     return (
         <div style={styles.container}>
             <h2>📋 Inquiry List</h2>
@@ -258,6 +287,7 @@ export default function InquiryList() {
                                         <th>Date</th>
                                         <th>Student Details</th>
                                         <th>School</th>
+                                        <th>Tution Course</th>
                                         <th>Remark</th>
                                         <th>Status</th>
                                         <th>Action</th>
@@ -312,7 +342,9 @@ export default function InquiryList() {
                                             </td>
 
                                             <td>{item.schoolCollege}</td>
-
+                                            <td align="center">
+                                                {item.tution || "-"}
+                                            </td>
                                             <td>
 
                                                 <div className="remark-cell">
@@ -344,22 +376,34 @@ export default function InquiryList() {
                                             <td>
                                                 <div className="action-column">
 
-                                                    <button
+                                                    <Link to={`/inquiry/${item._id}`} className="action-btn view"><FaRegEye /> {item.notes?.length || 0}</Link>
+                                                    {/* <button
                                                         className="action-btn view"
                                                         onClick={() =>
                                                             navigate(`/inquiry/${item._id}`)
                                                         }
                                                     >
                                                         <FaRegEye /> {item.notes?.length || 0}
-                                                    </button>
-
-                                                    <button
+                                                    </button> */}
+                                                    <Link to={`/add-note/${item._id}`} className="action-btn add"><FaPlus /></Link>
+                                                    {/* <button
                                                         className="action-btn add"
                                                         onClick={() =>
                                                             navigate(`/add-note/${item._id}`)
                                                         }
                                                     >
                                                         <FaPlus />
+                                                    </button> */}
+                                                    <button
+                                                        className="action-btn edit"
+                                                        disabled={!!item.tution?.trim()}
+                                                        onClick={() => {
+                                                            setSelectedInquiryId(item._id);
+                                                            setTuitionName(item.tution || "");
+                                                            setShowModal(true);
+                                                        }}
+                                                    >
+                                                        Add Tution
                                                     </button>
                                                 </div>
                                             </td>
@@ -427,6 +471,39 @@ export default function InquiryList() {
                         </>
                     )}
                 </>
+            )}
+
+            {showModal && (
+                <div className="modal-overlay">
+                    <div className="modal-container">
+                        <div className="modal-header">
+                            <h2>Add Tuition</h2>
+                            <button
+                                className="close-btn"
+                                onClick={() => setShowModal(false)}
+                            >
+                                ×
+                            </button>
+                        </div>
+
+                        <form onSubmit={handleSubmit}>
+                            <div className="form-group">
+                                <label>Add Tuition</label>
+                                <input
+                                    type="text"
+                                    placeholder="Enter tuition name"
+                                    value={tuitionName}
+                                    onChange={(e) => setTuitionName(e.target.value)}
+                                    required
+                                />
+                            </div>
+
+                            <button type="submit" className="submit-btn">
+                                Submit
+                            </button>
+                        </form>
+                    </div>
+                </div>
             )}
         </div>
     );
