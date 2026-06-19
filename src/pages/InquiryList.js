@@ -26,6 +26,7 @@ export default function InquiryList() {
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [statusFilter, setStatusFilter] = useState("all");
     const [schoolFilter, setSchoolFilter] = useState("all");
+    const [stdFilter, setStdFilter] = useState("all");
     const [search, setSearch] = useState("");
 
     useEffect(() => {
@@ -49,12 +50,15 @@ export default function InquiryList() {
         const schoolMatch =
             schoolFilter === "all" || item.schoolCollege === schoolFilter;
 
+        const stdMatch =
+            stdFilter === "all" || item.std === stdFilter; // 👈 NEW FILTER
+
         const searchMatch =
             item.name?.toLowerCase().includes(search.toLowerCase()) ||
             item.mobileNumber?.includes(search) ||
             item.schoolCollege?.toLowerCase().includes(search.toLowerCase());
 
-        return statusMatch && schoolMatch && searchMatch;
+        return statusMatch && schoolMatch && stdMatch && searchMatch;
     });
 
     // 2. Pagination
@@ -216,6 +220,24 @@ export default function InquiryList() {
                     ))}
                 </select>
 
+                {/* std */}
+                <select
+                    className="dropdown"
+                    value={stdFilter}
+                    onChange={(e) => {
+                        setStdFilter(e.target.value);
+                        setCurrentPage(1);
+                    }}
+                >
+                    <option value="all">All Std</option>
+
+                    {[...new Set(data.map((item) => item.std).filter(Boolean))].map((std) => (
+                        <option key={std} value={std}>
+                            {std}
+                        </option>
+                    ))}
+                </select>
+
                 {/* ROWS */}
                 <select
                     className="dropdown small"
@@ -240,6 +262,7 @@ export default function InquiryList() {
                         setSchoolFilter("all");
                         setRowsPerPage(10);
                         setCurrentPage(1);
+                        setStdFilter("all");
                     }}
                 >
                     Clear
