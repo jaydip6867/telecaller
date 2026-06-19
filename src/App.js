@@ -13,6 +13,7 @@ import TodayFollowup from './pages/Todayfollowup';
 
 import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
+import ForgotPassword from "./pages/ForgotPassword";
 
 function App() {
   return (
@@ -34,6 +35,15 @@ function App() {
           element={
             <PublicRoute>
               <Register />
+            </PublicRoute>
+          }
+        />
+
+        <Route
+          path="/forgotpassword"
+          element={
+            <PublicRoute>
+              <ForgotPassword />
             </PublicRoute>
           }
         />
