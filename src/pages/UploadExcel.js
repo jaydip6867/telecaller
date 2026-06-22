@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import API from "../api/axios";
 import { FaFileExcel, FaUpload } from "react-icons/fa";
 import Swal from "sweetalert2";
@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 export default function UploadExcel() {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
+  const fileInputRef = useRef(null);
 
   const upload = async () => {
     if (!file) {
@@ -24,16 +25,22 @@ export default function UploadExcel() {
       const formData = new FormData();
       formData.append("file", file);
 
-      await API.post("/inquiry/import-excel", formData);
+      const response = await API.post("/inquiry/import-excel", formData);
 
       Swal.fire({
         icon: "success",
-        title: "Success!",
-        text: "Excel Uploaded Successfully",
+        title: "Import Successful",
+        html: `
+    Total Rows: <b>${response.data.totalRows}</b><br/>
+    Inserted: <b>${response.data.inserted}</b><br/>
+    Skipped: <b>${response.data.skipped}</b>
+  `,
         confirmButtonColor: "#2563eb",
-        timer: 2000,
       });
       setFile(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     } catch (error) {
       console.error(error);
       Swal.fire({
@@ -61,6 +68,7 @@ export default function UploadExcel() {
 
         <label style={styles.uploadBox}>
           <input
+            ref={fileInputRef}
             type="file"
             accept=".xlsx,.xls"
             onChange={(e) => setFile(e.target.files[0])}
@@ -144,12 +152,12 @@ const styles = {
     transition: "0.3s",
   },
   loader: {
-  width: "22px",
-  height: "22px",
-  border: "3px solid rgba(255,255,255,0.4)",
-  borderTop: "3px solid #fff",
-  borderRadius: "50%",
-  animation: "spin 1s linear infinite",
-  margin: "0 auto",
-},
+    width: "22px",
+    height: "22px",
+    border: "3px solid rgba(255,255,255,0.4)",
+    borderTop: "3px solid #fff",
+    borderRadius: "50%",
+    animation: "spin 1s linear infinite",
+    margin: "0 auto",
+  },
 };
